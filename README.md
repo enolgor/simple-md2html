@@ -32,6 +32,8 @@ md2html(filepath, style, (err, html) => {
 
 ### CLI
 
+Install globally with `npm install -g simple-md2html` to use the CLI.
+
 `md2html <filepath> [-s <style>]` will create in the current working directory
 a html file with the same name of the specified markdown document.
 
