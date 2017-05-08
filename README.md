@@ -6,7 +6,7 @@
 
 It uses [marked](https://github.com/chjj/marked) + [pygmentize](https://github.com/rvagg/node-pygmentize-bundled) to convert it to html, default options.
 
-## What does this library do then?**
+## What does this library do then?
 
 It **embeds all images and style** (precompiled from pygmentize) so you have **one html file self-contained.**
 
