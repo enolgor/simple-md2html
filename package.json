@@ -1,18 +1,35 @@
 {
-  "name": "simple-md",
+  "name": "simple-md2html",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple Markdown to HTML converter",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint"
-  },
   "bin": {
     "md2html": "md2html.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "markdown",
+    "html",
+    "pygments",
+    "convert",
+    "marked",
+    "md",
+    "pygmentize",
+    "markup",
+    "compile"
+  ],
+  "author": {
+    "name": "Eneko Olivares Gorriti",
+    "email": "enolgor@teleco.upv.es",
+    "url": "http://github.com/enolgor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/enolgor/simple-md2html.git"
+  },
+  "bugs": {
+    "url": "https://github.com/enolgor/simple-md2html/issues"
+  },
+  "license": "MIT",
   "dependencies": {
     "fs-jetpack": "^0.13.3",
     "marked": "^0.3.6",
