@@ -2,10 +2,20 @@ const marked = require('marked');
 const pygmentize = require('pygmentize-bundled');
 const waterfall = require('run-waterfall');
 const jetpack = require('fs-jetpack');
+const tmp = require('tmp');
+const request = require('request');
 
 marked.setOptions({
   highlight: (code, _lang, cb) => pygmentize({ lang: _lang, format: 'html' }, code, (err, result) => cb(err, result.toString())),
 });
+
+const download = (url, filename) => (cb) => {
+  request({ uri: url, encoding: null }, (err, resp, body) => {
+    jetpack.write(filename, body, { atomic: true });
+    cb(err);
+  });
+};
+
 
 const init = (file, _style) => (cb) => {
   if (jetpack.exists(file) !== 'file') {
@@ -27,8 +37,20 @@ const readFile = (data, cb) =>
 
 const mdToHtml = (data, content, cb) => marked(content, (err, html) => cb(err, data, html));
 
+const downloadImages = (data, html, cb) => {
+  const images = [];
+  html = html.replace(/src="(http.+\.(png|jpe?g|gif)(?:\?[^"]*)?)"/g, (match, url, type) => {
+    const tmpfile = `${tmp.tmpNameSync()}.${type}`;
+    images.push(download(url, tmpfile));
+    return `src="${tmpfile}"`;
+  });
+  waterfall(images, (err) => {
+    cb(err, data, html);
+  });
+};
+
 const embedImages = (data, html, cb) => {
-  html = html.replace(/src=\"([\w/]+)\.(png|jpe?g|gif)\?.+\"/g, (match, imageFile, type) =>
+  html = html.replace(/src="(.+)\.(png|jpe?g|gif)(?:\?[^"]*)?"/g, (match, imageFile, type) =>
     `src="data:image/${type === 'jpg' ? 'jpeg' : type};base64,${data.filedir.read(`${imageFile}.${type}`, 'buffer').toString('base64')}"`);
   cb(null, data, html);
 };
@@ -46,6 +68,7 @@ module.exports = (file, style, cb) => {
     init(file, style),
     readFile,
     mdToHtml,
+    downloadImages,
     embedImages,
     embedStyle,
     wrap,
